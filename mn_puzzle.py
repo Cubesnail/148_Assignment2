@@ -29,6 +29,7 @@ class MNPuzzle(Puzzle):
     # implement __eq__ and __str__
     # __repr__ is up to you
 
+
     # TODO
     # override extensions
     # legal extensions are configurations that can be reached by swapping one

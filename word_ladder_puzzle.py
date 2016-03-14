@@ -22,20 +22,51 @@ class WordLadderPuzzle(Puzzle):
         # set of characters to use for 1-character changes
         self._chars = "abcdefghijklmnopqrstuvwxyz"
 
+    def __eq__(self, other):
+        pass
         # TODO
         # implement __eq__ and __str__
+
+    def __str__(self):
+        pass
         # __repr__ is up to you
 
+    def extensions(self, word):
+        extension = set()
+        word_list = word[:]
+        for temp_word in self._word_set:
+            for x in range(len(word_list)):
+                x += 1
+                pass
         # TODO
         # override extensions
         # legal extensions are WordPadderPuzzles that have a from_word that can
         # be reached from this one by changing a single letter to one of those
         # in self._chars
 
-        # TODO
+    def extenstions_different_algorithm(self,word):
+        extension = set()
+        for x in range(len(word)):
+            word_list = word[:]
+            del word_list[x]
+            for temp_word in self._word_set:
+                if len(temp_word) == len(word):
+                    temp_list = temp_word[:]
+                    del temp_list[x]
+                    if temp_list == word_list:
+                        extension.add(temp_word)
+        return extension
+        # length of the word * word set comparisons.
+
+    def is_solved(self):
+        """
+
+        @return:
+        """
         # override is_solved
         # this WordLadderPuzzle is solved when _from_word is the same as
         # _to_word
+        return self._from_word == self._to_word
 
 
 if __name__ == '__main__':
