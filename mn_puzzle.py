@@ -29,11 +29,55 @@ class MNPuzzle(Puzzle):
     # implement __eq__ and __str__
     # __repr__ is up to you
 
+    def extensions(self):
+        # TODO
+        # override extensions
+        # legal extensions are configurations that can be reached by swapping one
+        # symbol to the left, right, above, or below "*" with "*"
+        open_position = [-1,-1]
+        y = 0
+        while open_position[0] == -1:
+            x = 0
+            while open_position[1] == -1 and x < len(self.from_grid[y]):
+                if self.from_grid[y][x] == '*':
+                    open_position = [y,x]
+            y += 1
+        possible_moves = set()
 
-    # TODO
-    # override extensions
-    # legal extensions are configurations that can be reached by swapping one
-    # symbol to the left, right, above, or below "*" with "*"
+        if open_position[0] != 0:
+            possible_moves.add(move_down(self.from_grid,open_position))
+        if open_position[0] != len(self.from_grid) - 1:
+            possible_moves.add(move_up(self.from_grid,open_position))
+        if open_position[1] != 0:
+            possible_moves.add(move_left(self.from_grid,open_position))
+        if open_position[1] != len(self.from_grid[0]) - 1:
+            possible_moves.add(move_right(self.from_grid,open_position))
+
+        def move_left(grid,open_position):
+            result = grid[:]
+            y = open_position[0]
+            x = open_position[1]
+            result[y,x] = result[y,x + 1]
+            result[y,x + 1] = "*"
+            return result
+        def move_right(grid):
+            result = grid[:]
+            y = open_position[0]
+            x = open_position[1]
+            result[y,x] = result[y,x - 1]
+            result[y,x - 1] = "*"
+        def move_up(grid):
+            result = grid[:]
+            y = open_position[0]
+            x = open_position[1]
+            result[y,x] = result[y + 1,x]
+            result[y + 1,x] = "*"
+        def move_down(grid):
+            result = grid[:]
+            y = open_position[0]
+            x = open_position[1]
+            result[y,x] = result[y - 1,x]
+            result[y - 1,x] = "*"
 
     # TODO
     # override is_solved
