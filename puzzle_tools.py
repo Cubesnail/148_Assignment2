@@ -26,7 +26,30 @@ def depth_first_solve(puzzle):
     @type puzzle: Puzzle
     @rtype: PuzzleNode
     """
+    found = None
+    extensions = puzzle.extensions()
+    tree = PuzzleNode(puzzle,extensions)
+    x = 0
 
+    #while found == None and x < len(extensions):
+    #    found = depth_first_solve(tree.children[x])
+    #    x += 1
+    #if found != None
+    #    tree.children = found
+
+    def search(tree):
+        """
+
+        @param tree: PuzzleNode
+        @return:
+        """
+        found = None
+        while found == None and x < len(tree.children):
+            if tree.children[x].puzzle.is_solved():
+                found = tree.children[x]
+        if found != :
+            tree.children = found
+        return tree
 
 # TODO
 # implement breadth_first_solve
