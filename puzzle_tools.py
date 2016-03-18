@@ -3,6 +3,7 @@ Some functions for working with puzzles
 """
 from puzzle import Puzzle
 from collections import deque
+from copy import deepcopy
 # set higher recursion limit
 # which is needed in PuzzleNode.__str__
 # you may uncomment the next lines on a unix system such as CDF
@@ -26,10 +27,10 @@ def depth_first_solve(puzzle):
     @type puzzle: Puzzle
     @rtype: PuzzleNode
     """
-    found = None
-    extensions = puzzle.extensions()
-    tree = PuzzleNode(puzzle,extensions)
-    x = 0
+    tree = PuzzleNode()
+    tree.puzzle = puzzle
+
+
 
     #while found == None and x < len(extensions):
     #    found = depth_first_solve(tree.children[x])
@@ -37,20 +38,35 @@ def depth_first_solve(puzzle):
     #if found != None
     #    tree.children = found
 
-    def search(tree):
+    def search(node):
         """
 
-        @param tree: PuzzleNode
+        @param node: PuzzleNode
         @return:
         """
         found = None
-        while found == None and x < len(tree.children):
-            if tree.children[x].puzzle.is_solved():
-                found = tree.children[x]
-        if found != :
-            tree.children = found
-        return tree
+        extensions = node.puzzle.extensions()
+        temp_child = PuzzleNode()
+        children = []
 
+        if node == None or extensions == None:
+            return None
+
+        for extension in extensions:
+            temp_child.puzzle = extension
+            children.append(deepcopy(temp_child))
+
+        #  Make a list of children with the puzzle extensions.
+        x = 0
+        while found == None and x < len(node.children):
+            if node.children[x].puzzle.is_solved():
+                found = node.children[x]
+            x += 1
+
+        if found != None:
+            node.children = found
+        return node
+    return search(tree)
 # TODO
 # implement breadth_first_solve
 # do NOT change the type contract

@@ -31,9 +31,9 @@ class WordLadderPuzzle(Puzzle):
         pass
         # __repr__ is up to you
 
-    def extensions(self, word):
+    def extensions_2(self):
         extension = set()
-        word_list = word[:]
+        word_list = self._from_word[:]
         for temp_word in self._word_set:
             for x in range(len(word_list)):
                 x += 1
@@ -44,14 +44,14 @@ class WordLadderPuzzle(Puzzle):
         # be reached from this one by changing a single letter to one of those
         # in self._chars
 
-    def extenstions_different_algorithm(self,word):
+    def extensions(self):
         extension = set()
-        for x in range(len(word)):
-            word_list = word[:]
+        for x in range(len(self._from_word)):
+            word_list = list(self._from_word)
             del word_list[x]
             for temp_word in self._word_set:
-                if len(temp_word) == len(word):
-                    temp_list = temp_word[:]
+                if len(temp_word) == len(self._from_word):
+                    temp_list = list(temp_word)
                     del temp_list[x]
                     if temp_list == word_list:
                         extension.add(temp_word)
@@ -77,12 +77,13 @@ if __name__ == '__main__':
     with open("words", "r") as words:
         word_set = set(words.read().split())
     w = WordLadderPuzzle("same", "cost", word_set)
-    start = time()
-    sol = breadth_first_solve(w)
-    end = time()
+    #w = WordLadderPuzzle("same", "cost", word_set)
+    #start = time()
+    #sol = breadth_first_solve(w)
+    #end = time()
     print("Solving word ladder from same->cost")
     print("...using breadth-first-search")
-    print("Solutions: {} took {} seconds.".format(sol, end - start))
+    #print("Solutions: {} took {} seconds.".format(sol, end - start))
     start = time()
     sol = depth_first_solve(w)
     end = time()
