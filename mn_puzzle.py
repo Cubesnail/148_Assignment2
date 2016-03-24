@@ -44,15 +44,6 @@ class MNPuzzle(Puzzle):
             y += 1
         possible_moves = set()
 
-        if open_position[0] != 0:
-            possible_moves.add(move_down(self.from_grid,open_position))
-        if open_position[0] != len(self.from_grid) - 1:
-            possible_moves.add(move_up(self.from_grid,open_position))
-        if open_position[1] != 0:
-            possible_moves.add(move_left(self.from_grid,open_position))
-        if open_position[1] != len(self.from_grid[0]) - 1:
-            possible_moves.add(move_right(self.from_grid,open_position))
-
         def move_left(grid,open_position):
             result = grid[:]
             y = open_position[0]
@@ -78,6 +69,15 @@ class MNPuzzle(Puzzle):
             x = open_position[1]
             result[y,x] = result[y - 1,x]
             result[y - 1,x] = "*"
+
+        if open_position[0] != 0:
+            possible_moves.add(move_down(self.from_grid,open_position))
+        if open_position[0] != len(self.from_grid) - 1:
+            possible_moves.add(move_up(self.from_grid,open_position))
+        if open_position[1] != 0:
+            possible_moves.add(move_left(self.from_grid,open_position))
+        if open_position[1] != len(self.from_grid[0]) - 1:
+            possible_moves.add(move_right(self.from_grid,open_position))
 
     # TODO
     # override is_solved

@@ -29,16 +29,56 @@ def depth_first_solve(puzzle):
     """
     tree = PuzzleNode()
     tree.puzzle = puzzle
+    searched = set()
+
+    def find(node,searched):
+        """
+
+        @type node: PuzzleNode
+        @type searched: Set
+        @return:
+        """
+
+        found = None
+        extensions = node.puzzle.extensions()
+        temp_child = PuzzleNode()
+        children = []
+
+        if node.puzzle.is_solved():
+            return node
+
+        #  Check if the current puzzle is solved
+
+        if node == None or node.puzzle.__str__() in searched:
+            return None
+        searched.add(node.puzzle.__str__())
+        #  Trap for puzzles that have already been found.
+
+        if node.puzzle.fail_fast():
+            return None
+        #  Trap for known incorrect configurations
+
+        for extension in extensions:
+            if extension.__str__().strip() not in searched:
+                temp_child.puzzle = extension
+                temp_child.parent = node
+                node.children.append(deepcopy(temp_child))
+
+        x = 0
+        while found == None and x < len(node.children):
+            found = find(node.children[x],searched)
+            x += 1
+
+        #  check extensions for solutions one by one
 
 
+        if found == None:
+            node.children = None
+            return None
+        node.children = [found]
+        return node
 
-    #while found == None and x < len(extensions):
-    #    found = depth_first_solve(tree.children[x])
-    #    x += 1
-    #if found != None
-    #    tree.children = found
-
-    def search(node):
+    def search(node, searched):
         """
 
         @param node: PuzzleNode
@@ -49,24 +89,32 @@ def depth_first_solve(puzzle):
         temp_child = PuzzleNode()
         children = []
 
-        if node == None or extensions == None:
+        if node == None or extensions == None or node.puzzle.__str__() in searched:
             return None
+
 
         for extension in extensions:
             temp_child.puzzle = extension
-            children.append(deepcopy(temp_child))
-
+            if temp_child.__str__() not in searched:
+                children.append(deepcopy(temp_child))
+        node.children = children
         #  Make a list of children with the puzzle extensions.
+
+        searched.add(node.puzzle.__str__())
         x = 0
+
         while found == None and x < len(node.children):
             if node.children[x].puzzle.is_solved():
                 found = node.children[x]
             x += 1
+        #  Check all the extensions for solutions
 
         if found != None:
             node.children = found
         return node
-    return search(tree)
+
+
+    return find(tree,searched)
 # TODO
 # implement breadth_first_solve
 # do NOT change the type contract

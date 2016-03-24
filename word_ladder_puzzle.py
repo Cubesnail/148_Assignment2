@@ -23,39 +23,81 @@ class WordLadderPuzzle(Puzzle):
         self._chars = "abcdefghijklmnopqrstuvwxyz"
 
     def __eq__(self, other):
-        pass
-        # TODO
+        """
+
+        @type other: WordLadderPuzzle
+        @return:
+        """
+        return self._from_word == other._from_word and self._to_word == other._to_word
         # implement __eq__ and __str__
 
     def __str__(self):
-        pass
+        # TODO Doctests
         # __repr__ is up to you
+        return self._from_word
 
-    def extensions_2(self):
-        extension = set()
-        word_list = self._from_word[:]
-        for temp_word in self._word_set:
-            for x in range(len(word_list)):
-                x += 1
-                pass
         # TODO
         # override extensions
         # legal extensions are WordPadderPuzzles that have a from_word that can
         # be reached from this one by changing a single letter to one of those
         # in self._chars
 
+    def fail_fast(self):
+        """
+
+        @return:
+        >>> test_word = 'dome'
+        >>> to_word = 'bong'
+        >>> ws = ['come','dome','bong']
+        >>> w = WordLadderPuzzle(test_word,to_word,ws)
+        >>> w.fail_fast()
+        False
+        >>> w._from_word = w._to_word
+        >>> w.fail_fast()
+        True
+        """
+        return self.extensions() == []
+
     def extensions(self):
-        extension = set()
+        """
+
+        @return:
+        >>> test_word = 'dome'
+        >>> to_word = 'bong'
+        >>> ws = ['come','dome','bong']
+        >>> w = WordLadderPuzzle(test_word,to_word,ws)
+        >>> L1 = w.extensions()
+        >>> result = 'come'
+        >>> check = WordLadderPuzzle(result, to_word, ws)
+        >>> check in L1
+        True
+        >>> check._from_word = check._to_word
+        >>> check in L1
+        False
+        >>> w in L1
+        False
+        """
+
+        extension = []
+
         for x in range(len(self._from_word)):
             word_list = list(self._from_word)
+            #  Parse the word into a list of characters.
             del word_list[x]
+            #  Delete a character from the word
             for temp_word in self._word_set:
-                if len(temp_word) == len(self._from_word):
+                if len(temp_word) == len(self._from_word) and temp_word != self._from_word:
+                    #  Trap for words that are not the same length
                     temp_list = list(temp_word)
+
                     del temp_list[x]
                     if temp_list == word_list:
-                        extension.add(temp_word)
+                        extension.append(WordLadderPuzzle(temp_word, self._to_word, self._word_set))
+
+                        #  Compare dictionary with word
+
         return extension
+
         # length of the word * word set comparisons.
 
     def is_solved(self):
@@ -76,8 +118,8 @@ if __name__ == '__main__':
     from time import time
     with open("words", "r") as words:
         word_set = set(words.read().split())
+    #w = WordLadderPuzzle("same", "come", word_set)
     w = WordLadderPuzzle("same", "cost", word_set)
-    #w = WordLadderPuzzle("same", "cost", word_set)
     #start = time()
     #sol = breadth_first_solve(w)
     #end = time()
