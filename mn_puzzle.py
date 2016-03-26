@@ -28,6 +28,17 @@ class MNPuzzle(Puzzle):
     # TODO
     # implement __eq__ and __str__
     # __repr__ is up to you
+    def __repr__(self):
+        result = ''
+        for row in self.from_grid:
+            for number in row:
+                result += number
+            result += '\n'
+        return result.strip()
+
+    def is_solved(self):
+        #  TODO
+        return self.from_grid == self.to_grid
 
     def extensions(self):
         # TODO
@@ -36,49 +47,67 @@ class MNPuzzle(Puzzle):
         # symbol to the left, right, above, or below "*" with "*"
         open_position = [-1,-1]
         y = 0
+        #  Change the grid to a list because tuples are immutable
+        grid_list = []
+        for row in self.from_grid:
+            grid_list.append(list(row))
+
         while open_position[0] == -1:
             x = 0
             while open_position[1] == -1 and x < len(self.from_grid[y]):
                 if self.from_grid[y][x] == '*':
-                    open_position = [y,x]
+                    open_position = [y, x]
+                x += 1
             y += 1
-        possible_moves = set()
+        possible_moves = []
+
+        def list_to_tuple(grid):
+            result = []
+            for rows in grid:
+                result.append(tuple(rows))
+            return tuple(result)
 
         def move_left(grid,open_position):
-            result = grid[:]
+            left = [a[:] for a in grid]
             y = open_position[0]
             x = open_position[1]
-            result[y,x] = result[y,x + 1]
-            result[y,x + 1] = "*"
-            return result
-        def move_right(grid):
-            result = grid[:]
+            left[y][x] = left[y][x + 1]
+            left[y][x + 1] = "*"
+            return list_to_tuple(left)
+
+        def move_right(grid,open_position):
+            right = [a[:] for a in grid]
             y = open_position[0]
             x = open_position[1]
-            result[y,x] = result[y,x - 1]
-            result[y,x - 1] = "*"
-        def move_up(grid):
-            result = grid[:]
+            right[y][x] = right[y][x - 1]
+            right[y][x - 1] = "*"
+            return list_to_tuple(right)
+
+        def move_up(grid,open_position):
+            up = [a[:] for a in grid]
             y = open_position[0]
             x = open_position[1]
-            result[y,x] = result[y + 1,x]
-            result[y + 1,x] = "*"
-        def move_down(grid):
-            result = grid[:]
+            up[y][x] = up[y + 1][x]
+            up[y + 1][x] = "*"
+            return list_to_tuple(up)
+
+        def move_down(grid,open_position):
+            down = [a[:] for a in grid]
             y = open_position[0]
             x = open_position[1]
-            result[y,x] = result[y - 1,x]
-            result[y - 1,x] = "*"
+            down[y][x] = down[y - 1][x]
+            down[y - 1][x] = "*"
+            return list_to_tuple(down)
 
         if open_position[0] != 0:
-            possible_moves.add(move_down(self.from_grid,open_position))
+            possible_moves.append(MNPuzzle(move_down(grid_list,open_position),self.to_grid))
         if open_position[0] != len(self.from_grid) - 1:
-            possible_moves.add(move_up(self.from_grid,open_position))
+            possible_moves.append(MNPuzzle(move_up(grid_list,open_position),self.to_grid))
         if open_position[1] != 0:
-            possible_moves.add(move_left(self.from_grid,open_position))
+            possible_moves.append(MNPuzzle(move_right(grid_list,open_position),self.to_grid))
         if open_position[1] != len(self.from_grid[0]) - 1:
-            possible_moves.add(move_right(self.from_grid,open_position))
-
+            possible_moves.append(MNPuzzle(move_left(grid_list,open_position),self.to_grid))
+        return possible_moves
     # TODO
     # override is_solved
     # a configuration is solved when from_grid is the same as to_grid

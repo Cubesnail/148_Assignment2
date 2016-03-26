@@ -34,8 +34,10 @@ class WordLadderPuzzle(Puzzle):
     def __str__(self):
         # TODO Doctests
         # __repr__ is up to you
-        return self._from_word
+        return 'From word: {} \nTo word: {}'.format(self._from_word,self._to_word)
 
+    def __repr__(self):
+        return self._from_word
         # TODO
         # override extensions
         # legal extensions are WordPadderPuzzles that have a from_word that can
@@ -118,14 +120,13 @@ if __name__ == '__main__':
     from time import time
     with open("words", "r") as words:
         word_set = set(words.read().split())
-    #w = WordLadderPuzzle("same", "come", word_set)
     w = WordLadderPuzzle("same", "cost", word_set)
-    #start = time()
-    #sol = breadth_first_solve(w)
-    #end = time()
+    start = time()
+    sol = breadth_first_solve(w)
+    end = time()
     print("Solving word ladder from same->cost")
     print("...using breadth-first-search")
-    #print("Solutions: {} took {} seconds.".format(sol, end - start))
+    print("Solutions: {} took {} seconds.".format(sol, end - start))
     start = time()
     sol = depth_first_solve(w)
     end = time()

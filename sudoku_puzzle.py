@@ -55,6 +55,12 @@ class SudokuPuzzle(Puzzle):
                 self._n == other._n and self._symbols == other._symbols and
                 self._symbol_set == other._symbol_set)
 
+    def __repr__(self):
+        result = ''
+        for x in self._symbols:
+            result += x
+        return result
+
     def __str__(self):
         """
         Return a human-readable string representation of SudokuPuzzle self.

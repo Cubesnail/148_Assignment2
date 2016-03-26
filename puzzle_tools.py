@@ -3,7 +3,6 @@ Some functions for working with puzzles
 """
 from puzzle import Puzzle
 from collections import deque
-from copy import deepcopy
 # set higher recursion limit
 # which is needed in PuzzleNode.__str__
 # you may uncomment the next lines on a unix system such as CDF
@@ -49,21 +48,20 @@ def depth_first_solve(puzzle):
 
         #  Check if the current puzzle is solved
 
-        if node == None or node.puzzle.__str__() in searched:
+        if node == None or node.puzzle.__repr__() in searched:
             return None
-        searched.add(node.puzzle.__str__())
-        #  Trap for puzzles that have already been found.
+        searched.add(node.puzzle.__repr__())
+        #  Trap for configurations that have already been searched.
 
         if node.puzzle.fail_fast():
             return None
         #  Trap for known incorrect configurations
 
         for extension in extensions:
-            if extension.__str__().strip() not in searched:
-                temp_child.puzzle = extension
-                temp_child.parent = node
-                node.children.append(deepcopy(temp_child))
-
+            if extension.__repr__().strip() not in searched:
+                #temp_child.puzzle = extension
+                #temp_child.parent = node
+                node.children.append(PuzzleNode(extension,None,node))
         x = 0
         while found == None and x < len(node.children):
             found = find(node.children[x],searched)
@@ -71,48 +69,15 @@ def depth_first_solve(puzzle):
 
         #  check extensions for solutions one by one
 
+        #if found != None:
+        #    pass
+            #  used for debugging purposes
 
         if found == None:
             node.children = None
             return None
         node.children = [found]
         return node
-
-    def search(node, searched):
-        """
-
-        @param node: PuzzleNode
-        @return:
-        """
-        found = None
-        extensions = node.puzzle.extensions()
-        temp_child = PuzzleNode()
-        children = []
-
-        if node == None or extensions == None or node.puzzle.__str__() in searched:
-            return None
-
-
-        for extension in extensions:
-            temp_child.puzzle = extension
-            if temp_child.__str__() not in searched:
-                children.append(deepcopy(temp_child))
-        node.children = children
-        #  Make a list of children with the puzzle extensions.
-
-        searched.add(node.puzzle.__str__())
-        x = 0
-
-        while found == None and x < len(node.children):
-            if node.children[x].puzzle.is_solved():
-                found = node.children[x]
-            x += 1
-        #  Check all the extensions for solutions
-
-        if found != None:
-            node.children = found
-        return node
-
 
     return find(tree,searched)
 # TODO
@@ -131,8 +96,60 @@ def breadth_first_solve(puzzle):
     @type puzzle: Puzzle
     @rtype: PuzzleNode
     """
+    tree = PuzzleNode()
+    tree.puzzle = puzzle
+    searched = set()
+    queue = deque()
+
+    if tree.puzzle.is_solved():
+        return tree
+
+    def find(node,searched,queue):
+        """
+
+        @type node: PuzzleNode
+        @type searched: Set
+        @return:
+        """
+
+        found = None
+        extensions = node.puzzle.extensions()
+        children = []
+
+        if node.puzzle.fail_fast():
+            return None
+        #  Trap for known incorrect configurations
+
+        if extensions == []:
+            return None
+            #  Return None for nodes with no children
+
+        for extension in extensions:
+            if extension.__repr__().strip() not in searched:
+                if extension.is_solved():
+                    return PuzzleNode(extension,None,node)
+
+                #  Check the children for a solution, add to a queue if there isn't
+                node.children.append(PuzzleNode(extension,None,node))
+                queue.appendleft(PuzzleNode(extension,None,node))
 
 
+        if list(queue) != []:
+            return find(queue.pop(),searched,queue)
+        #  check extensions for solutions one by one
+
+
+        if found != None:
+            pass
+            #  used for debugging purposes
+
+        return node
+    solution = find(tree,searched,queue)
+    while solution.parent != None:
+        solution.parent.children = [solution]
+        solution = solution.parent
+    #  Format the node such that each parent has only one child.
+    return solution
 # Class PuzzleNode helps build trees of PuzzleNodes that have
 # an arbitrary number of children, and a parent.
 class PuzzleNode:
