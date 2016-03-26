@@ -106,6 +106,7 @@ class WordLadderPuzzle(Puzzle):
         """
 
         @return:
+
         """
         # override is_solved
         # this WordLadderPuzzle is solved when _from_word is the same as

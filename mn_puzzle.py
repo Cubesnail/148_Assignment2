@@ -27,8 +27,28 @@ class MNPuzzle(Puzzle):
 
     # TODO
     # implement __eq__ and __str__
-    # __repr__ is up to you
+    def __eq__(self, other):
+        """Returns true if self == puzzle and false otherwise.
+
+        @param other: MNPuzzle
+        @rtype: bool
+        >>> test = MNPuzzle([1,2,3,4,'*'],[1,2,3,4,'*'])
+        >>> copy = MNPuzzle([1,2,3,4,'*'],[1,2,3,4,'*'])
+        >>> test = copy
+        True
+        >>> copy.from_grid = [1]
+        >>> test = copy
+        False
+        """
+        return self.from_grid == other.from_grid and self.to_grid == other.to_grid
+    
     def __repr__(self):
+        """Returns an unambiguous string representation of the puzzle
+        >>> test = MNPuzzle([1,2,3,4,'*'],[1,2,3,4,'*'])
+        >>> test.__repr__()
+        1234*
+        @return:
+        """
         result = ''
         for row in self.from_grid:
             for number in row:
@@ -37,11 +57,25 @@ class MNPuzzle(Puzzle):
         return result.strip()
 
     def is_solved(self):
-        #  TODO
+        """MNPuzzle is solved when the grid is the same as the target grid.
+
+        @rtype: bool
+        >>> test = MNPuzzle([1,2,3,4,'*'],[1,2,3,4,'*'])
+        >>> test.is_solved()
+        True
+        >>> test.from_grid = [1,2,3,'*',4]
+        False
+        """
         return self.from_grid == self.to_grid
 
     def extensions(self):
-        # TODO
+        """Returns a list of possible extensions to
+        @rtype: list[MNPuzzle]
+        >>> test = MNPuzzle([1,2,3,4,'*'],[1,2,3,4,'*'])
+        >>> extension = test.extensions()
+        >>> extension
+        [1,2,3,*,4]
+        """
         # override extensions
         # legal extensions are configurations that can be reached by swapping one
         # symbol to the left, right, above, or below "*" with "*"
