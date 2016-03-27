@@ -52,6 +52,10 @@ class GridPegSolitairePuzzle(Puzzle):
     # legal extensions consist of all configurations that can be reached by
     # making a single jump from this configuration
     def extensions(self):
+        """Returns a list of extensions from the current configuration.
+
+        @rtype: list[GridPegSolitarePuzzle]
+        """
 
         extension_list = []
 
@@ -119,8 +123,14 @@ class GridPegSolitairePuzzle(Puzzle):
     # TODO
     # override is_solved
     def is_solved(self):
-        """
-        @return:
+        """Returns true if the current puzzle is solved and false otherwise
+
+        @rtype: bool
+        >>> test = GridPegSolitairePuzzle(['*','*','.'], {"*", ".", "#"})
+        >>> test.is_solved()
+        False
+        >>> test._marker = ['.','.','*']
+        True
         """
         count = 0
         #  Iterate through each piece in the board and count the amount of pegs.

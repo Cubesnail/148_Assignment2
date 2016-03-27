@@ -23,26 +23,41 @@ class WordLadderPuzzle(Puzzle):
         self._chars = "abcdefghijklmnopqrstuvwxyz"
 
     def __eq__(self, other):
-        """
+        """Returns true if this puzzle is equal to the other puzzle and false otherwise.
 
         @type other: WordLadderPuzzle
-        @return:
+        @rtype: bool
+        >>> test = WordLadderPuzzle('test','case',['test','case'])
+        >>> copy = WordLadderPuzzle('test','case',['test','case'])
+        >>> test == copy
+        True
+        >>> copy._to_word = 'test'
+        >>> test = copy
+        False
         """
         return self._from_word == other._from_word and self._to_word == other._to_word
         # implement __eq__ and __str__
 
     def __str__(self):
-        # TODO Doctests
-        # __repr__ is up to you
+        """Returns a human readable string representation of the string.
+
+        @rtype: string
+        >>> test = WordLadderPuzzle('test','case',['test','case'])
+        >>> print(test)
+        From word: test
+        To word: case
+        """
         return 'From word: {} \nTo word: {}'.format(self._from_word,self._to_word)
 
     def __repr__(self):
+        """Returns an unambiguous string representation of the puzzle
+
+        @return:
+        >>> test = WordLadderPuzzle('case', 'test',['case','test'])
+        >>> test.__repr__()
+        'case'
+        """
         return self._from_word
-        # TODO
-        # override extensions
-        # legal extensions are WordPadderPuzzles that have a from_word that can
-        # be reached from this one by changing a single letter to one of those
-        # in self._chars
 
     def fail_fast(self):
         """
@@ -103,10 +118,15 @@ class WordLadderPuzzle(Puzzle):
         # length of the word * word set comparisons.
 
     def is_solved(self):
-        """
+        """Returns true if the current word ladder is solved and false otherwise.
 
-        @return:
-
+        @rtype: bool
+        >>> test = WordLadderPuzzle('test','case',['test','case'])
+        >>> test.is_solved()
+        False
+        >>> test._from_word = 'case'
+        >>> test.is_solved()
+        True
         """
         # override is_solved
         # this WordLadderPuzzle is solved when _from_word is the same as
