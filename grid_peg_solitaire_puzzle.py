@@ -27,8 +27,22 @@ class GridPegSolitairePuzzle(Puzzle):
     # TODO
     # implement __eq__, __str__ methods
     def __eq__(self, other):
-        #  TODO
-        pass
+        """
+
+        @param other: None, GridPegSolitarePuzzle
+        @rtype: bool
+        >>> test = GridPegSolitairePuzzle([["*","*","."]], {"*", ".", "#"})
+        >>> copy = GridPegSolitairePuzzle([["*","*","."]], {"*", ".", "#"})
+        >>> test == copy
+        True
+        >>> copy._marker = [[]]
+        >>> test == copy
+        False
+        """
+        if other == None:
+            return False
+        return self._marker == other._marker
+
     def __str__(self):
         result = ''
         for row in self._marker:
@@ -42,19 +56,25 @@ class GridPegSolitairePuzzle(Puzzle):
 
     # __repr__ is up to you
     def __repr__(self):
+        """Returns an unambiguious string representation of the puzzle
+        @rtype: str
+        >>> test = GridPegSolitairePuzzle([["*","*","."]], {"*", ".", "#"})
+        >>> test.__repr__()
+        '**.'
+        """
         result = ''
         for row in self._marker:
             for column in row:
                 result += column
         return result
-    # TODO
-    # override extensions
-    # legal extensions consist of all configurations that can be reached by
-    # making a single jump from this configuration
+
     def extensions(self):
         """Returns a list of extensions from the current configuration.
 
         @rtype: list[GridPegSolitarePuzzle]
+        >>> test = GridPegSolitairePuzzle([["*",".","."]], {"*", ".", "#"})
+        >>> test.extensions()
+        []
         """
 
         extension_list = []
@@ -126,10 +146,11 @@ class GridPegSolitairePuzzle(Puzzle):
         """Returns true if the current puzzle is solved and false otherwise
 
         @rtype: bool
-        >>> test = GridPegSolitairePuzzle(['*','*','.'], {"*", ".", "#"})
+        >>> test = GridPegSolitairePuzzle([['*','*','.']], {"*", ".", "#"})
         >>> test.is_solved()
         False
-        >>> test._marker = ['.','.','*']
+        >>> test._marker = [['.','.','*']]
+        >>> test.is_solved()
         True
         """
         count = 0
