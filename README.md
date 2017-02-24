@@ -1,2 +1,3 @@
-# 148_Assignment2
-CSC148Assignment2
+# Puzzle Solver
+Solves puzzles in both DFS and BFS and compares times
+
